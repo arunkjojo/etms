@@ -83,7 +83,11 @@ $row = $info->fetch(PDO::FETCH_ASSOC);
                             <div class="form-group">
 
                               <div class="col-sm-3">
-                                <a title="Update Task"  href="task-info.php"><span class="btn btn-success-custom btn-xs">Go Back</span></a>
+                                <a title="Update Task"  href="task-info.php"><span class="btn btn-success-custom  btn-xs"><< Go Back</span></a>
+                              </div>
+							  <div class="col-sm-6"></div>
+							  <div class="col-sm-3">
+                                <a title="Clock In"  href="attendance-info.php?tId=<?php echo $task_id; ?>"><span class="btn btn-success-custom btn-xs">Clock In >></span></a>
                               </div>
                             </div>
                           </form> 

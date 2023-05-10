@@ -400,13 +400,14 @@ class Admin_Class
 		$date = new DateTime('now', new DateTimeZone('Asia/Manila'));
 
 		$user_id  = $this->test_form_input_data($data['user_id']);
+		$task_id  = $this->test_form_input_data($data['task_id']);
 		$punch_in_time = $date->format('Y-m-d H:i:s');
 
 		try {
-			$add_attendance = $this->db->prepare("INSERT INTO `attendance_info` (`atn_user_id`, `in_time`) VALUES ('$user_id', '$punch_in_time') ");
+			$add_attendance = $this->db->prepare("INSERT INTO `attendance_info` (`atn_user_id`, `in_time`, `task_id`) VALUES ($user_id, '$punch_in_time',$task_id)");
 			$add_attendance->execute();
 
-			header('Location: attendance-info.php');
+			header('Location: attendance-info.php?tId='.$task_id);
 		} catch (PDOException $e) {
 			echo $e->getMessage();
 		}
@@ -416,6 +417,7 @@ class Admin_Class
 	public function add_punch_out($data)
 	{
 
+		var_dump($data);
 
 		$date = new DateTime('now', new DateTimeZone('Asia/Manila'));
 		$punch_out_time = $date->format('Y-m-d H:i:s');
@@ -425,19 +427,26 @@ class Admin_Class
 		$dteEnd   = new DateTime($punch_out_time);
 		$dteDiff  = $dteStart->diff($dteEnd);
 		$total_duration = $dteDiff->format("%H:%I:%S");
-
+		$atn_updates=$this->test_form_input_data($data['task_update']);
+		$task_id=$this->test_form_input_data($data['task_id']);
 		$attendance_id  = $this->test_form_input_data($data['aten_id']);
 
 		try {
-			$update_user = $this->db->prepare("UPDATE `attendance_info` SET `out_time` = :x, `total_duration` = :y WHERE `aten_id` = :id ");
+			$sql="UPDATE `attendance_info` SET `out_time` = :out_time, `total_duration` = :duration,`task_id`=:task_id,`atn_updates`=:updates WHERE `aten_id` = :id ";
+			// echo "br />".$sql;
+			$update_user = $this->db->prepare($sql);
 
-			$update_user->bindparam(':x', $punch_out_time);
-			$update_user->bindparam(':y', $total_duration);
+			$update_user->bindparam(':out_time', $punch_out_time);
+			$update_user->bindparam(':duration', $total_duration);
+			$update_user->bindparam(':updates', $atn_updates);
+			$update_user->bindparam(':task_id', $task_id);
 			$update_user->bindparam(':id', $attendance_id);
 
 			$update_user->execute();
 
-			header('Location: attendance-info.php');
+
+
+			header('Location: attendance-info.php?tId='.$task_id);
 		} catch (PDOException $e) {
 			echo $e->getMessage();
 		}

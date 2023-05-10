@@ -178,7 +178,7 @@ include("include/sidebar.php");
               ?>
                 <tr>
                   <td><?php echo $serial; $serial++; ?></td>
-                  <td><?php echo $row['t_title']; ?></td>
+                  <td><a href="attendance-info.php?tId=<?php echo $row['task_id']; ?>"><?php echo $row['t_title']; ?></a></td>
                   <td><?php echo $row['fullname']; ?></td>
                   <td><?php echo $row['t_start_time']; ?></td>
                   <td><?php echo $row['t_end_time']; ?></td>

@@ -49,17 +49,17 @@ $row = $info->fetch(PDO::FETCH_ASSOC);
 									<div class="form-group">
 										<label class="control-label text-p-reset">Task Title</label>
 										<div class="">
-											<input type="text" placeholder="Task Title" id="task_title" name="task_title" list="expense" class="form-control rounded-0" value="<?php echo $row['t_title']; ?>" <?php if ($user_role != 1) { ?> readonly <?php } ?> val required>
+											<input type="text" placeholder="Task Title" id="task_title" name="task_title" list="expense" class="form-control rounded-0" value="<?php echo $row['t_title']; ?>" <?php if ($user_role != 1) { ?> readonly <?php } ?> required>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="control-label text-p-reset">Task Description</label>
 										<div class="">
-											<textarea name="task_description" id="task_description" placeholder="Text Description" class="form-control rounded-0" rows="5" cols="5"><?php echo $row['t_description']; ?></textarea>
+											<textarea name="task_description" id="task_description" placeholder="Text Description" class="form-control rounded-0" rows="5" cols="5" <?php if ($user_role != 1) { ?> readonly <?php } ?>><?php echo $row['t_description']; ?></textarea>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label text-p-reset">Strat Time</label>
+										<label class="control-label text-p-reset">Start Time</label>
 										<div class="">
 											<input type="text" name="t_start_time" id="t_start_time" class="form-control rounded-0" value="<?php echo $row['t_start_time']; ?>">
 										</div>

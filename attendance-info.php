@@ -1,8 +1,8 @@
 <?php
 
 require 'authentication.php'; // admin authentication check 
-
 // auth check
+
 $user_id = $_SESSION['admin_id'];
 $user_name = $_SESSION['name'];
 $security_key = $_SESSION['security_key'];
@@ -11,14 +11,24 @@ if ($user_id == NULL || $security_key == NULL) {
   header('Location: index.php');
 }
 
+if($user_role != 1){
+  if(isset($_GET['tId']) && $_GET['tId']!=''){
+    $task_id = $_GET['tId'];
+  }else{
+    header("Location: /task-info.php");
+  }
+}
+
+
 
 
 
 if (isset($_GET['delete_attendance'])) {
   $action_id = $_GET['aten_id'];
+  $tId = $_GET['task_id'];
 
   $sql = "DELETE FROM `attendance_info` WHERE `aten_id` = :id";
-  $sent_po = "attendance-info.php";
+  $sent_po = "attendance-info.php?tId=".$tId;
   $obj_admin->delete_data_by_this_method($sql, $action_id, $sent_po);
 }
 
@@ -44,41 +54,52 @@ include("include/sidebar.php");
 <div class="row">
   <div class="col-md-12">
     <div class="well well-custom">
-      <div class="row">
-        <div class="col-md-8 ">
-          <div class="btn-group">
-            <?php
+      <?php if($user_role != 1) {
+        $sql = "SELECT * FROM `task_info` WHERE `t_end_time`>CURRENT_TIMESTAMP AND `task_id`=$task_id;";
+        $info = $obj_admin->manage_all_info($sql);
+        if ($info->rowCount() > 0) {?>
+        <div class="row">
+          <div class="col-md-8 ">
+            <div class="btn-group">
+              <?php
+              
+              $sql = "SELECT * FROM `attendance_info` WHERE `atn_user_id` = $user_id AND `task_id`=$task_id AND `out_time` IS NULL";
+              $info = $obj_admin->manage_all_info($sql);
+              $num_row = $info->rowCount();
+              if ($num_row == 0) {
+              ?>
 
-            $sql = "SELECT * FROM `attendance_info` WHERE `atn_user_id` = $user_id AND `out_time` IS NULL";
-            $info = $obj_admin->manage_all_info($sql);
-            $num_row = $info->rowCount();
-            if ($num_row == 0) {
-            ?>
+                <div class="btn-group">
+                  <form method="post" role="form" action="">
+                    <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
+                    <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                    <button type="submit" name="add_punch_in" class="btn btn-primary btn-lg rounded">Clock In</button>
+                  </form>
 
-              <div class="btn-group">
-                <form method="post" role="form" action="">
-                  <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                  <button type="submit" name="add_punch_in" class="btn btn-primary btn-lg rounded">Clock In</button>
-                </form>
+                </div>
 
-              </div>
+              <?php } ?>
 
-            <?php } ?>
-
+            </div>
           </div>
         </div>
-
+      <?php } else { ?>
+        <div>
+          <h4 class='text-center bg-danger text-danger'>
+            Sorry, the deadline for this task has passed. Please contact your 'Team Manager'.
+          </h4>
+        </div>
+      <?php }
+    } ?>
+      <div class="">
+        <h3 class="text-center">Manage Attendance</h3>
       </div>
-
-      <p class="text-center">
-        <h3>Manage Atendance</h3>
-      </p>
       <div class="gap"></div>
 
       <div class="gap"></div>
 
       <div class="table-responsive">
-        <table class="table table-codensed table-custom">
+        <table class="table table-responsive table-codensed table-custom">
           <thead>
             <tr>
               <th>S.N.</th>
@@ -86,8 +107,10 @@ include("include/sidebar.php");
               <th>In Time</th>
               <th>Out Time</th>
               <th>Total Duration</th>
+              <th>Updates</th>
               <th>Status</th>
               <?php if ($user_role == 1) { ?>
+                <th>Task</th>
                 <th>Action</th>
               <?php } ?>
             </tr>
@@ -98,7 +121,7 @@ include("include/sidebar.php");
             if ($user_role == 1) {
               $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) ORDER BY `a`.`aten_id` DESC";
             } else {
-              $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `atn_user_id` = $user_id ORDER BY `a`.`aten_id` DESC";
+              $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `atn_user_id` = $user_id AND `task_id`=$task_id ORDER BY `a`.`aten_id` DESC";
             }
 
 
@@ -131,12 +154,17 @@ include("include/sidebar.php");
 
 
                     ?></td>
+                    
+                <td><?php echo $row['atn_updates']; ?></td>
                 <?php if ($row['out_time'] == null) { ?>
                   <td>
                     <form method="post" role="form" action="">
                       <input type="hidden" name="punch_in_time" value="<?php echo $row['in_time']; ?>">
                       <input type="hidden" name="aten_id" value="<?php echo $row['aten_id']; ?>">
-                      <button type="submit" name="add_punch_out" class="btn btn-danger btn-xs rounded">Clock Out</button>
+                      <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
+                      <textarea style="color: black !important;" name="task_update" id="updates" class="hidden"></textarea>
+                      <button id="add_punch_out" class="btn btn-danger btn-xs rounded">Clock Out</button>
+                      <button type="submit" id="submit" name="add_punch_out" class="btn btn-success btn-xs rounded hidden">Update</button>
                     </form>
                   </td>
                 <?php } else { ?>
@@ -146,7 +174,16 @@ include("include/sidebar.php");
                 <?php } ?>
                 <?php if ($user_role == 1) { ?>
                   <td>
-                    <a title="Delete" href="?delete_attendance=delete_attendance&aten_id=<?php echo $row['aten_id']; ?>" onclick=" return check_delete();"><span class="glyphicon glyphicon-trash"></span></a>
+                    <?php 
+                      $sql = "SELECT * FROM `task_info` WHERE `task_id`=".$row['task_id'].";";
+                      $taskInfo = $obj_admin->manage_all_info($sql);
+                      $taskData = $taskInfo->fetch(PDO::FETCH_ASSOC);
+                      echo $taskData['t_title']; 
+                    ?>
+                  </td>
+
+                  <td>
+                    <a title="Delete" href="?delete_attendance=delete_attendance&aten_id=<?php echo $row['aten_id']; ?>&task_id=<?php echo $row['task_id']; ?>" onclick=" return check_delete();"><span class="glyphicon glyphicon-trash"></span></a>
                   </td>
                 <?php } else { ?>
                   <td>
@@ -171,4 +208,19 @@ include("include/footer.php");
 
 ?>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> -->
+<script>
+  $(document).ready(function(){
+    $("#updates").hide();
+    $("#updates").removeAttr('required');
+    
+    $("#add_punch_out").click(function(){
+      $("#updates").removeClass('hidden');
+      $("#add_punch_out").hide();
+      $("#updates").show();
+      $("#updates").css('color: black');
+      $("#updates").attr('required', 'true');
+      $("#submit").removeClass('hidden');
+    });
+  });
+</script>
