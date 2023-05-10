@@ -26,7 +26,9 @@ CREATE TABLE `attendance_info` (
   `atn_user_id` int(20) NOT NULL,
   `in_time` datetime DEFAULT NULL,
   `out_time` datetime DEFAULT NULL,
-  `total_duration` varchar(100) DEFAULT NULL
+  `total_duration` varchar(100) DEFAULT NULL,
+  `task_id` int(20) NOT NULL,
+  `atn_updates` text DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -66,8 +68,7 @@ CREATE TABLE `tbl_admin` (
 --
 
 INSERT INTO `tbl_admin` (`user_id`, `fullname`, `username`, `email`, `password`, `temp_password`, `user_role`) VALUES
-(1, 'Admin', 'admin', 'arunkjojo@gmail.com', '0192023a7bbd73250516f069df18b500', NULL, 1),
-(2, 'Mohammed Sirajuddeen', 'siraj', 'msirajuddeen02@gmail.com', '9ddc44f3f7f78da5781d6cab571b2fc5', '', 2);
+(1, 'Admin', 'admin', 'admin@example.com', '0192023a7bbd73250516f069df18b500', NULL, 1),
 
 --
 -- Indexes for dumped tables
@@ -78,6 +79,9 @@ INSERT INTO `tbl_admin` (`user_id`, `fullname`, `username`, `email`, `password`,
 --
 ALTER TABLE `attendance_info`
   ADD PRIMARY KEY (`aten_id`);
+
+ALTER TABLE `attendance_info` 
+  ADD INDEX(`task_id`);
 
 --
 -- Indexes for table `task_info`

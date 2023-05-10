@@ -1,5 +1,5 @@
-**Database Name: etmsh**
-**Developed by Sabbir Hossain**
+**Database Name: etms**
+**Developed by Arun Jojo**
 **Works on both PHP Version 5.6.3 and 7.4.12**
 
 **Admin Login Details**
