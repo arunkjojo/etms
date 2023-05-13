@@ -453,6 +453,63 @@ class Admin_Class
 	}
 
 
+	/* =================Leave Related===================== */
+	public function add_to_leave($data)
+	{
+
+
+		// data insert 
+		$date = new DateTime('now', new DateTimeZone('Asia/Manila'));
+
+		$user_id  = $this->test_form_input_data($data['user_id']);
+		$leave_for  = $this->test_form_input_data($data['leave_for']);
+		$leave_time  = $this->test_form_input_data($data['leave_time']);
+		$leave_from  = $this->test_form_input_data($data['leave_from']);
+		$leave_to  = $this->test_form_input_data($data['leave_to']);
+		$leave_reason  = $this->test_form_input_data($data['leave_reason']);
+
+		try {
+			$add_to_leave = $this->db->prepare("INSERT INTO `leaves`(`user_id`, `leave_for`, `leave_time`, `leave_from`, `leave_to`, `leave_reason`) VALUES (?,?,?,?,?,?)");
+			$add_to_leave->execute(
+				array(
+					$user_id,
+					$leave_for,
+					$leave_time,
+					$leave_from,
+					$leave_to,
+					$leave_reason
+				)
+			);
+
+			header('Location: /');
+		} catch (PDOException $e) {
+			echo $e->getMessage();
+		}
+	}
+
+	public function approve_leave($id)
+	{
+		try {
+			$add_to_leave = $this->db->prepare("UPDATE `leaves` SET `leave_approve`=1 WHERE `id`=?");
+			$add_to_leave->execute(array($id));
+
+			header('Location: /leave-info.php');
+		} catch (PDOException $e) {
+			echo $e->getMessage();
+		}
+	}
+
+	public function reject_leave($id)
+	{
+		try {
+			$add_to_leave = $this->db->prepare("UPDATE `leaves` SET `leave_approve`=2 WHERE `id`=?");
+			$add_to_leave->execute(array($id));
+
+			header('Location: /leave-info.php');
+		} catch (PDOException $e) {
+			echo $e->getMessage();
+		}
+	}
 
 	/* --------------------delete_data_by_this_method--------------*/
 
@@ -477,8 +534,6 @@ class Admin_Class
 
 	public function manage_all_info($sql)
 	{
-
-
 		try {
 			$info = $this->db->prepare($sql);
 			$info->execute();

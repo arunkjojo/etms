@@ -62,6 +62,15 @@
               <li <?php if ($page_name == "Daily-Task-Report") {
                     echo "class=\"active\"";
                   } ?>><a href="daily-task-report.php">Task Report<span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-file"></span></a></li>
+              <li <?php if ($page_name == "Leave") {
+                  echo "class=\"active\"";
+                } ?>
+              >
+                <a href="leave-info.php">
+                  Leave 
+                  <span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-comment"></span>
+                </a>
+              </li>
               <li <?php if ($page_name == "Daily-Attennce-Report") {
                     echo "class=\"active\"";
                   } ?>><a href="daily-attendance-report.php">Attendance Report<span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-file"></span></a></li>
@@ -77,10 +86,31 @@
             <ul class="nav navbar-nav navbar-nav-custom">
               <li <?php if ($page_name == "Task_Info") {
                     echo "class=\"active\"";
-                  } ?>><a href="task-info.php">Task Mangement<span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tasks"></span></a></li>
+                  } ?>
+              >
+                <a href="task-info.php">
+                  Task Mangement
+                  <span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tasks"></span>
+                </a>
+              </li>
               <li <?php if ($page_name == "Attendance") {
                     echo "class=\"active\"";
-                  } ?>><a href="attendance-info.php">Attendance <span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-calendar"></span></a></li>
+                  } ?>
+              >
+                <a href="attendance-info.php">
+                  Attendance 
+                  <span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-calendar"></span>
+                </a>
+              </li>
+              <li <?php if ($page_name == "Leave") {
+                  echo "class=\"active\"";
+                } ?>
+              >
+                <a href="leave-info.php">
+                  Leave 
+                  <span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-comment"></span>
+                </a>
+              </li>
               <li><a href="?logout=logout">Logout<span style="font-size:16px; color:#5bcad9;" class="pull-right hidden-xs showopacity glyphicon glyphicon-log-out"></span></a></li>
             </ul>
           </div>
