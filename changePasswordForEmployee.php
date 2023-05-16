@@ -17,6 +17,7 @@ include("include/login_header.php");
 
 ?>
 
+<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <div class="row">
 	<div class="col-md-4 col-md-offset-3">
 		<div class="well" style="position:relative;top:20vh;">
@@ -50,7 +51,12 @@ include("include/login_header.php");
 
 
 <?php
-
+}else{?>
+	<div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
+	  <h2>Sorry ETMS Application not working on this system</h2>
+    <button onclick="window.location.reload();">Please Reload</button>
+	</div>
+  <?php }
 include("include/footer.php");
 
 ?>

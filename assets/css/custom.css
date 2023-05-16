@@ -1,6 +1,7 @@
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
     body,
     html {
+        min-width:300px !important; 
         height: 100%;
         font-size: 17px;
         background: #fff;
@@ -564,4 +565,5 @@
     
     nav.sidebar {
         width: 14em !important;
+        max-width: 100% !important;
     }

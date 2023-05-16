@@ -1,29 +1,28 @@
-    function htmlbodyHeightUpdate(){
-		var height3 = $( window ).height()
-		var height1 = $('.nav').height()+50
-		height2 = $('.main').height()
-		if(height2 > height3){
-			$('html').height(Math.max(height1,height3,height2)+10);
-			$('body').height(Math.max(height1,height3,height2)+10);
-		}
-		else
-		{
-			$('html').height(Math.max(height1,height3,height2));
-			$('body').height(Math.max(height1,height3,height2));
-		}
-		
+function htmlbodyHeightUpdate(){
+	var height3 = $( window ).height()
+	var height1 = $('.nav').height()+50
+	height2 = $('.main').height()
+	if(height2 > height3){
+		$('html').height(Math.max(height1,height3,height2)+10);
+		$('body').height(Math.max(height1,height3,height2)+10);
 	}
-	$(document).ready(function () {
+	else
+	{
+		$('html').height(Math.max(height1,height3,height2));
+		$('body').height(Math.max(height1,height3,height2));
+	}
+	
+}
+$(document).ready(function () {
+	htmlbodyHeightUpdate()
+	$( window ).resize(function() {
 		htmlbodyHeightUpdate()
-		$( window ).resize(function() {
-			htmlbodyHeightUpdate()
-		});
-		$( window ).scroll(function() {
-			height2 = $('.main').height()
-  			htmlbodyHeightUpdate()
-		});
 	});
-
+	$( window ).scroll(function() {
+		height2 = $('.main').height()
+		htmlbodyHeightUpdate()
+	});
+});
 
 // Get the <datalist> and <input> elements.
 var dataList = document.getElementById('json-datalist');
@@ -57,3 +56,66 @@ request.onreadystatechange = function(response) {
     }
   }
 };
+
+$( document ).ready(function() {
+	if(getCookie('siteWillOpen') === null || getCookie('siteWillOpen') === ''){
+		setCookie('siteWillOpen', null, 5);
+	}
+	function setCookie(cname, cvalue, exdays) {
+		const d = new Date();
+		d.setTime(d.getTime() + (exdays * 60 * 1000));
+		let expires = "expires="+d.toUTCString();
+		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	}
+	  
+	function getCookie(cname) {
+		let name = cname + "=";
+		let ca = document.cookie.split(';');
+		for(let i = 0; i < ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+	/* Storing user's device details in a variable*/
+	let details = navigator.userAgent;
+
+	/* Creating a regular expression
+	containing some mobile devices keywords
+	to search it in details string*/
+	let regexp = /android|iphone|kindle|ipad/i;
+
+	/* Using test() method to search regexp in details
+	it returns boolean value*/
+	let isMobileDevice = regexp.test(details);
+
+	if (isMobileDevice) {
+		var preSite=getCookie('siteWillOpen');
+		// alert("preSite "+preSite+typeof(getCookie('siteWillOpen')));
+		setCookie("siteWillOpen", "notOpen", 10);
+		if(confirm("Are you open this ETMS Application in desktop/laptop")){
+			// preSite == "open" && 
+			window.location.reload();
+		}
+		// document.cookie = "siteWillOpen = notOpen";
+		// setCookie("siteWillOpen", "notOpen", 2);
+		// window.location.reload();
+	} else {
+		var preSite=getCookie('siteWillOpen');
+		// alert("preSite "+preSite+typeof(getCookie('siteWillOpen')));
+		setCookie("siteWillOpen", "open", 10);
+		
+		if(preSite == "notOpen" && confirm("Are you open this ETMS Application in desktop/laptop")){
+			window.location.reload();
+		}
+		// document.cookie = "siteWillOpen = open";
+		// setCookie("siteWillOpen", "open", 2);
+		// window.location.reload();
+	} 
+	
+});

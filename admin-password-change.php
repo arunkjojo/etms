@@ -26,6 +26,7 @@ include("include/sidebar.php");
 
 ?>
 
+<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <script>
   function validate(admin_new_password, admin_cnew_password) {
     var a = document.getElementById(admin_new_password).value;
@@ -113,7 +114,12 @@ include("include/sidebar.php");
 
 
 <?php
-
+}else{?>
+  <div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
+    <h2>Sorry ETMS Application not working on this system</h2>
+    <button onclick="window.location.reload();">Please Reload</button>
+  </div>
+<?php }
 include("include/footer.php");
 
 ?>

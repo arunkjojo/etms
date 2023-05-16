@@ -5,7 +5,7 @@
 **Admin Login Details**
 
 Username: admin
-Password: admin123
+Password: Admin2786.
 
 
 NOTE: after creating new account for the employees, you'll get a random generated

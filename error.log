@@ -1,0 +1,4 @@
+[Tue May 16 22:28:57.497482 2023] [php:warn] [pid 13828:tid 1868] [client 127.0.0.1:54831] PHP Warning:  Undefined array key "admin_id" in D:\\learning\\php\\etms\\task-info.php on line 6, referer: http://etms.cw/task-info.php
+[Tue May 16 22:28:57.497482 2023] [php:warn] [pid 13828:tid 1868] [client 127.0.0.1:54831] PHP Warning:  Undefined array key "security_key" in D:\\learning\\php\\etms\\task-info.php on line 8, referer: http://etms.cw/task-info.php
+[Tue May 16 22:28:57.497482 2023] [php:warn] [pid 13828:tid 1868] [client 127.0.0.1:54831] PHP Warning:  Undefined array key "user_role" in D:\\learning\\php\\etms\\task-info.php on line 14, referer: http://etms.cw/task-info.php
+[Tue May 16 22:28:57.497482 2023] [php:warn] [pid 13828:tid 1868] [client 127.0.0.1:54831] PHP Warning:  Undefined array key "user_role" in D:\\learning\\php\\etms\\include\\sidebar.php on line 46, referer: http://etms.cw/task-info.php

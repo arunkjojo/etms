@@ -32,6 +32,7 @@ $row = $info->fetch(PDO::FETCH_ASSOC);
 
 <!--modal for employee add-->
 
+<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 
@@ -140,7 +141,12 @@ $row = $info->fetch(PDO::FETCH_ASSOC);
 
 
 <?php
-
+}else{?>
+	<div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
+	  <h2>Sorry ETMS Application not working on this system</h2>
+    <button onclick="window.location.reload();">Please Reload</button>
+	</div>
+  <?php }
 include("include/footer.php");
 
 ?>
