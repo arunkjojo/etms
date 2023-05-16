@@ -18,6 +18,8 @@ class Admin_Class
 		} catch (PDOException $message) {
 			echo $message->getMessage();
 		}
+		// set timezone to Indian Standard Time
+		date_default_timezone_set('Asia/Kolkata');
 	}
 
 	/* ---------------------- test_form_input_data ----------------------------------- */
@@ -397,7 +399,7 @@ class Admin_Class
 
 
 		// data insert 
-		$date = new DateTime('now', new DateTimeZone('Asia/Manila'));
+		$date = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
 
 		$user_id  = $this->test_form_input_data($data['user_id']);
 		$task_id  = $this->test_form_input_data($data['task_id']);
@@ -419,7 +421,7 @@ class Admin_Class
 
 		var_dump($data);
 
-		$date = new DateTime('now', new DateTimeZone('Asia/Manila'));
+		$date = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
 		$punch_out_time = $date->format('Y-m-d H:i:s');
 		$punch_in_time  = $this->test_form_input_data($data['punch_in_time']);
 
@@ -432,14 +434,14 @@ class Admin_Class
 		$attendance_id  = $this->test_form_input_data($data['aten_id']);
 
 		try {
-			$sql="UPDATE `attendance_info` SET `out_time` = :out_time, `total_duration` = :duration,`task_id`=:task_id,`atn_updates`=:updates WHERE `aten_id` = :id ";
+			$sql="UPDATE `attendance_info` SET `out_time` = :out_time, `total_duration` = :duration,`atn_updates`=:updates WHERE `aten_id` = :id ";
 			// echo "br />".$sql;
 			$update_user = $this->db->prepare($sql);
 
 			$update_user->bindparam(':out_time', $punch_out_time);
 			$update_user->bindparam(':duration', $total_duration);
 			$update_user->bindparam(':updates', $atn_updates);
-			$update_user->bindparam(':task_id', $task_id);
+			// $update_user->bindparam(':task_id', $task_id);
 			$update_user->bindparam(':id', $attendance_id);
 
 			$update_user->execute();
@@ -459,7 +461,7 @@ class Admin_Class
 
 
 		// data insert 
-		$date = new DateTime('now', new DateTimeZone('Asia/Manila'));
+		$date = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
 
 		$user_id  = $this->test_form_input_data($data['user_id']);
 		$leave_for  = $this->test_form_input_data($data['leave_for']);

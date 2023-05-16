@@ -98,7 +98,7 @@ include("include/sidebar.php");
                 <td><?php echo $row['out_time']; ?></td>
                 <td><?php
                     if ($row['total_duration'] == null) {
-                      $date = new DateTime('now', new DateTimeZone('Asia/Manila'));
+                      $date = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
                       $current_time = $date->format('d-m-Y H:i:s');
 
                       $dteStart = new DateTime($row['in_time']);

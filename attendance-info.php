@@ -92,6 +92,22 @@ include("include/sidebar.php");
         </div>
       <?php }
     } ?>
+    <?php
+      $currentDate=date("Y-m-d");
+      if ($user_role == 1) {
+        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '".$currentDate."%' AND out_time LIKE '".$currentDate."%';";
+      } else {
+        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '".$currentDate."%' AND out_time LIKE '".$currentDate."%' AND atn_user_id=$user_id;";
+      }
+      $totalWorkInfo = $obj_admin->manage_all_info($sql);
+      $workRow = $totalWorkInfo->rowCount();
+      if ($workRow > 0) {
+        $totalWork = $totalWorkInfo->fetch(PDO::FETCH_ASSOC);
+        if($totalWork['todayTotalWork']!='')
+          $today=DateTime::createFromFormat('H:i:s.u', $totalWork['todayTotalWork']);
+          echo '<h4 class="text-center text-danger">Today Total Works: <b class="text-success">'.$today->format('H:i:s').'</b></h4>';
+      }
+    ?>
       <div class="">
         <h3 class="text-center">Manage Attendance</h3>
       </div>
@@ -133,6 +149,7 @@ include("include/sidebar.php");
               echo '<tr><td colspan="7">No Data found</td></tr>';
             }
             while ($row = $info->fetch(PDO::FETCH_ASSOC)) {
+              $task_id=$row['task_id']
             ?>
               <tr>
                 <td><?php echo $serial;
@@ -142,7 +159,7 @@ include("include/sidebar.php");
                 <td><?php echo $row['out_time']; ?></td>
                 <td><?php
                     if ($row['total_duration'] == null) {
-                      $date = new DateTime('now', new DateTimeZone('Asia/Manila'));
+                      $date = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
                       $current_time = $date->format('d-m-Y H:i:s');
 
                       $dteStart = new DateTime($row['in_time']);
