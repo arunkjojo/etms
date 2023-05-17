@@ -19,10 +19,6 @@ if($user_role != 1){
   }
 }
 
-
-
-
-
 if (isset($_GET['delete_attendance'])) {
   $action_id = $_GET['aten_id'];
   $tId = $_GET['task_id'];
@@ -37,9 +33,9 @@ if (isset($_POST['add_punch_in'])) {
   $info = $obj_admin->add_punch_in($_POST);
 }
 
-if (isset($_POST['add_punch_out'])) {
-  $obj_admin->add_punch_out($_POST);
-}
+// if (isset($_POST['add_punch_out'])) {
+//   $obj_admin->add_punch_out($_POST);
+// }
 
 
 $page_name = "Attendance";
@@ -74,11 +70,12 @@ include("include/sidebar.php");
                   <form method="post" role="form" action="">
                     <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
                     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                    <button type="submit" name="add_punch_in" class="btn btn-primary btn-lg rounded">Clock In</button>
+                    <button type="submit" name="add_punch_in" class="btn btn-success btn-lg rounded">Start</button>
                   </form>
-
                 </div>
 
+              <?php }else{?>
+                <a title="Update Task Comment" class="btn btn-danger btn-lg rounded" href="update-task.php?task_id=<?php echo $task_id;?>">Stop</a>
               <?php } ?>
 
             </div>
@@ -103,9 +100,10 @@ include("include/sidebar.php");
       $workRow = $totalWorkInfo->rowCount();
       if ($workRow > 0) {
         $totalWork = $totalWorkInfo->fetch(PDO::FETCH_ASSOC);
-        if($totalWork['todayTotalWork']!='')
-          $today=DateTime::createFromFormat('H:i:s.u', $totalWork['todayTotalWork']);
-          echo '<h4 class="text-center text-danger">Today Total Works: <b class="text-success">'.$today->format('H:i:s').'</b></h4>';
+        if($totalWork['todayTotalWork']!=''){
+          $today=strtotime($totalWork['todayTotalWork']);
+          echo '<h4 class="text-center text-danger">Today Total Works: <b class="text-success">'.date('H:i:s', $today).'</b></h4>';
+        }
       }
     ?>
       <div class="">
@@ -125,7 +123,7 @@ include("include/sidebar.php");
               <th>Out Time</th>
               <th>Total Duration</th>
               <th>Updates</th>
-              <th>Status</th>
+              <!-- <th>Status</th> -->
               <?php if ($user_role == 1) { ?>
                 <th>Task</th>
                 <th>Action</th>
@@ -149,7 +147,7 @@ include("include/sidebar.php");
               echo '<tr><td colspan="7">No Data found</td></tr>';
             }
             while ($row = $info->fetch(PDO::FETCH_ASSOC)) {
-              $task_id=$row['task_id']
+              $task_id=$row['task_id'];
             ?>
               <tr>
                 <td><?php echo $serial;
@@ -174,22 +172,22 @@ include("include/sidebar.php");
                     ?></td>
                     
                 <td><?php echo $row['atn_updates']; ?></td>
-                <?php if ($row['out_time'] == null) { ?>
-                  <td>
+                <?php // if ($row['out_time'] == null) { ?>
+                  <!-- <td>
                     <form method="post" role="form" action="">
-                      <input type="hidden" name="punch_in_time" value="<?php echo $row['in_time']; ?>">
-                      <input type="hidden" name="aten_id" value="<?php echo $row['aten_id']; ?>">
-                      <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
+                      <input type="hidden" name="punch_in_time" value="<?php // echo $row['in_time']; ?>">
+                      <input type="hidden" name="aten_id" value="<?php // echo $row['aten_id']; ?>">
+                      <input type="hidden" name="task_id" value="<?php // echo $task_id; ?>">
                       <textarea style="color: black !important;" name="task_update" id="updates" class="hidden"></textarea>
                       <button id="add_punch_out" class="btn btn-danger btn-xs rounded">Clock Out</button>
                       <button type="submit" id="submit" name="add_punch_out" class="btn btn-success btn-xs rounded hidden">Update</button>
                     </form>
-                  </td>
-                <?php } else { ?>
-                  <td class="text-center">
+                  </td> -->
+                <?php // } else { ?>
+                  <!-- <td class="text-center">
                     ------
-                  </td>
-                <?php } ?>
+                  </td> -->
+                <?php // } ?>
                 <?php if ($user_role == 1) { ?>
                   <td>
                     <?php 
@@ -232,7 +230,7 @@ include("include/footer.php");
 ?>
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> -->
-<script>
+<!-- <script>
   $(document).ready(function(){
     $("#updates").hide();
     $("#updates").removeAttr('required');
@@ -246,4 +244,4 @@ include("include/footer.php");
       $("#submit").removeClass('hidden');
     });
   });
-</script>
+</script> -->
