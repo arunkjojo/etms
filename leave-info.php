@@ -11,10 +11,10 @@ if ($user_id == NULL || $security_key == NULL) {
     header('Location: index.php');
 }
 
-if (isset($_GET['leave_action']) && $_GET['leave_action']=='leave_approve') {
+if (isset($_GET['leave_action']) && $_GET['leave_action'] == 'leave_approve') {
     $obj_admin->approve_leave($_GET['id']);
 }
-if (isset($_GET['leave_action']) && $_GET['leave_action']=='leave_reject') {
+if (isset($_GET['leave_action']) && $_GET['leave_action'] == 'leave_reject') {
     $obj_admin->reject_leave($_GET['id']);
 }
 if (isset($_POST['add_to_leave'])) {
@@ -27,7 +27,6 @@ include("include/sidebar.php");
 
 //$info = "Hello World";
 ?>
-<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <div class="row">
@@ -99,7 +98,7 @@ include("include/sidebar.php");
                             <th>End Time</th>
                             <th>Leave Reason</th>
                             <th>Status</th>
-                            <?php if($user_role==1){?>
+                            <?php if ($user_role == 1) { ?>
                                 <th>Create At</th>
                                 <th>Employee</th>
                                 <th>Approve</th>
@@ -120,21 +119,22 @@ include("include/sidebar.php");
                         while ($row = $info->fetch(PDO::FETCH_ASSOC)) {
                         ?>
                             <tr>
-                                <td><?php echo $serial; $serial++; ?></td>
+                                <td><?php echo $serial;
+                                    $serial++; ?></td>
                                 <td><?php echo $row['leave_for']; ?></td>
                                 <td><?php echo $row['leave_time']; ?></td>
                                 <td><?php echo $row['leave_from']; ?></td>
                                 <td><?php echo $row['leave_to']; ?></td>
                                 <td><?php echo $row['leave_reason']; ?></td>
-                                <td><?php echo ($row['leave_approve']==2?'Rejected':($row['leave_approve']==1?'Approved':'Pending')); ?></td>
-                                <?php if($user_role==1){?>
+                                <td><?php echo ($row['leave_approve'] == 2 ? 'Rejected' : ($row['leave_approve'] == 1 ? 'Approved' : 'Pending')); ?></td>
+                                <?php if ($user_role == 1) { ?>
                                     <td><?php echo $row['leave_at']; ?></td>
-                                    <td><?php 
-                                        $user_sql = "SELECT * FROM `tbl_admin` WHERE `user_id`=".$row['user_id'];
+                                    <td><?php
+                                        $user_sql = "SELECT * FROM `tbl_admin` WHERE `user_id`=" . $row['user_id'];
                                         $user_info = $obj_admin->manage_all_info($user_sql);
                                         $user_row = $user_info->fetch(PDO::FETCH_ASSOC);
                                         echo $user_row['fullname'];
-                                    ?></td>
+                                        ?></td>
                                     <td>
                                         <a title="Approve" href="?leave_action=leave_approve&id=<?php echo $row['id']; ?>">Approve <span class="glyphicon glyphicon-ok-sign"></span></a>
                                     </td>
@@ -154,12 +154,7 @@ include("include/sidebar.php");
 
 
 <?php
-}else{?>
-    <div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
-      <h2>Sorry ETMS Application not working on this system</h2>
-    <button onclick="window.location.reload();">Please Reload</button>
-    </div>
-  <?php }
+
 include("include/footer.php");
 
 ?>
@@ -168,7 +163,7 @@ include("include/footer.php");
 
 <script type="text/javascript">
     $("#add_leave").hide();
-    $("#toggle_leave_div").click(function(){
+    $("#toggle_leave_div").click(function() {
         var x = document.getElementById("add_leave");
         if (x.style.display === "none") {
             x.style.display = "block";
@@ -176,15 +171,14 @@ include("include/footer.php");
             x.style.display = "none";
         }
     })
-  flatpickr('#leave_from', {
-    enableTime: false,
-    minDate:"today",
-    maxDate: new Date().fp_incr(13) // 14 days from now
-  });
-  flatpickr('#leave_to', {
-    enableTime: false,
-    minDate:"today",
-    maxDate: new Date().fp_incr(14) // 14 days from now
-  });
-
+    flatpickr('#leave_from', {
+        enableTime: false,
+        minDate: "today",
+        maxDate: new Date().fp_incr(13) // 14 days from now
+    });
+    flatpickr('#leave_to', {
+        enableTime: false,
+        minDate: "today",
+        maxDate: new Date().fp_incr(14) // 14 days from now
+    });
 </script>

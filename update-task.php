@@ -18,8 +18,8 @@ $task_id = $_GET['task_id'];
 
 
 if (isset($_POST['add_punch_out'])) {
-    $obj_admin->add_punch_out($_POST);
-  }
+	$obj_admin->add_punch_out($_POST);
+}
 
 $page_name = "Update Task Comments";
 include("include/sidebar.php");
@@ -29,15 +29,15 @@ $info = $obj_admin->manage_all_info($sql);
 $row = $info->fetch(PDO::FETCH_ASSOC);
 
 if ($user_role == 1) {
-    $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `task_id`=$task_id ORDER BY `a`.`aten_id` DESC";
+	$sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `task_id`=$task_id ORDER BY `a`.`aten_id` DESC";
 } else {
-    $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `atn_user_id` = $user_id AND `task_id`=$task_id ORDER BY `a`.`aten_id` DESC";
+	$sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `atn_user_id` = $user_id AND `task_id`=$task_id ORDER BY `a`.`aten_id` DESC";
 }
 
 $att_info = $obj_admin->manage_all_info($sql);
 $num_row = $att_info->rowCount();
 if ($num_row == 0) {
-    echo '<tr><td colspan="7">No Data found</td></tr>';
+	echo '<tr><td colspan="7">No Data found</td></tr>';
 }
 $att_row = $att_info->fetch(PDO::FETCH_ASSOC);
 
@@ -45,7 +45,6 @@ $att_row = $att_info->fetch(PDO::FETCH_ASSOC);
 
 <!--modal for employee add-->
 
-<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 
@@ -66,7 +65,7 @@ $att_row = $att_info->fetch(PDO::FETCH_ASSOC);
 											<input type="text" placeholder="Task Title" id="task_title" name="task_title" list="expense" class="form-control rounded-0" value="<?php echo $row['t_title']; ?>" <?php if ($user_role != 1) { ?> readonly <?php } ?> required>
 										</div>
 									</div>
-                                    <div class="form-group">
+									<div class="form-group">
 										<label class="control-label text-p-reset">Task Updates</label>
 										<div class="">
 											<textarea name="task_update" id="task_update" placeholder="Text Updates" class="form-control rounded-0" rows="5" cols="5" autofocus></textarea>
@@ -76,17 +75,17 @@ $att_row = $att_info->fetch(PDO::FETCH_ASSOC);
 									<div class="form-group">
 										<div class="col-sm-offset-3 col-sm-1"></div>
 										<div class="col-sm-4">
-                                            <input type="hidden" name="punch_in_time" value="<?php echo $att_row['in_time']; ?>">
-                                            <input type="hidden" name="aten_id" value="<?php echo $att_row['aten_id']; ?>">
-                                            <input type="hidden" name="task_id" value="<?php echo $att_row['task_id']; ?>">
+											<input type="hidden" name="punch_in_time" value="<?php echo $att_row['in_time']; ?>">
+											<input type="hidden" name="aten_id" value="<?php echo $att_row['aten_id']; ?>">
+											<input type="hidden" name="task_id" value="<?php echo $att_row['task_id']; ?>">
 
 											<button type="submit" name="add_punch_out" class="btn btn-primary-custom">Update Now</button>
 										</div>
 									</div>
-                                    
+
 									<div class="form-group">
-                                        <a title="Attendance" class="text-info" href="attendance-info.php?tId=<?php echo $task_id;?>">Go Back</a>
-                                    </div>
+										<a title="Attendance" class="text-info" href="attendance-info.php?tId=<?php echo $task_id; ?>">Go Back</a>
+									</div>
 								</form>
 							</div>
 						</div>
@@ -114,12 +113,6 @@ $att_row = $att_info->fetch(PDO::FETCH_ASSOC);
 
 
 <?php
-}else{?>
-	<div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
-	  <h2>Sorry ETMS Application not working on this system</h2>
-    <button onclick="window.location.reload();">Please Reload</button>
-	</div>
-  <?php }
 include("include/footer.php");
 
 ?>

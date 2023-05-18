@@ -16,7 +16,7 @@ if (isset($_POST['login_btn'])) {
 }
 
 $page_name = "Login";
-include("include/login_header.php");?>
+include("include/login_header.php"); ?>
 <style>
 	html,
 	body {
@@ -34,7 +34,8 @@ include("include/login_header.php");?>
 		margin: unset !important
 	}
 </style>
-<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
+<?php // if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ 
+?>
 <div class="col-lg-4 col-md-6 col-sm-12">
 	<div class="well rounded-0" style="background:#fff !important">
 		<p class="text-center">
@@ -66,12 +67,14 @@ include("include/login_header.php");?>
 </div>
 
 <?php
-}else{ header("refresh:1*60*1000"); ?>
-	<div style="text-align: center; margin-top: 25%; margin-left: auto; margin-right: auto; color: red; background-color:black">
+// }else{ header("refresh:1*60*1000"); 
+?>
+<!-- <div style="text-align: center; margin-top: 25%; margin-left: auto; margin-right: auto; color: red; background-color:black">
 	  <h2>Sorry ETMS Application not working on this system</h2>
     <button onclick="window.location.reload();">Please Reload</button>
-	</div>
-  <?php }
+	</div> -->
+<?php
+// }
 include("include/footer.php");
 
 ?>

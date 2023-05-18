@@ -40,7 +40,7 @@ include("include/sidebar.php");
 
 ?>
 <?php $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d') ?>
-<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <div class="row">
@@ -59,7 +59,7 @@ include("include/sidebar.php");
 
       </div>
       <p class="text-center">
-        <h3>Daily Task Report</h3>
+      <h3>Daily Task Report</h3>
       </p>
       <div class="gap"></div>
 
@@ -132,12 +132,6 @@ include("include/sidebar.php");
 
 
 <?php
-}else{?>
-  <div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
-    <h2>Sorry ETMS Application not working on this system</h2>
-    <button onclick="window.location.reload();">Please Reload</button>
-  </div>
-<?php }
 include("include/footer.php");
 
 

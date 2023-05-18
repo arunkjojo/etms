@@ -17,7 +17,6 @@ include("include/login_header.php");
 
 ?>
 
-<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <div class="row">
 	<div class="col-md-4 col-md-offset-3">
 		<div class="well" style="position:relative;top:20vh;">
@@ -31,13 +30,13 @@ include("include/login_header.php");
 				<?php } ?>
 
 				<div class="input-group" id="show_hide_password">
-					<input type="password" class="form-control" placeholder="Password" name="password" required/>
+					<input type="password" class="form-control" placeholder="Password" name="password" required />
 					<div class="input-group-addon">
 						<a href=""><i class="glyphicon glyphicon-eye-close"></i></a>
 					</div>
 				</div>
 				<div class="input-group" id="show_hide_re_password">
-					<input type="password" class="form-control" placeholder="Retype Password" name="re_password" required/>
+					<input type="password" class="form-control" placeholder="Retype Password" name="re_password" required />
 					<div class="input-group-addon">
 						<a href=""><i class="glyphicon glyphicon-eye-close"></i></a>
 					</div>
@@ -51,12 +50,6 @@ include("include/login_header.php");
 
 
 <?php
-}else{?>
-	<div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
-	  <h2>Sorry ETMS Application not working on this system</h2>
-    <button onclick="window.location.reload();">Please Reload</button>
-	</div>
-  <?php }
 include("include/footer.php");
 
 ?>

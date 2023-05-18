@@ -11,10 +11,10 @@ if ($user_id == NULL || $security_key == NULL) {
   header('Location: index.php');
 }
 
-if($user_role != 1){
-  if(isset($_GET['tId']) && $_GET['tId']!=''){
+if ($user_role != 1) {
+  if (isset($_GET['tId']) && $_GET['tId'] != '') {
     $task_id = $_GET['tId'];
-  }else{
+  } else {
     header("Location: /task-info.php");
   }
 }
@@ -24,7 +24,7 @@ if (isset($_GET['delete_attendance'])) {
   $tId = $_GET['task_id'];
 
   $sql = "DELETE FROM `attendance_info` WHERE `aten_id` = :id";
-  $sent_po = "attendance-info.php?tId=".$tId;
+  $sent_po = "attendance-info.php?tId=" . $tId;
   $obj_admin->delete_data_by_this_method($sql, $action_id, $sent_po);
 }
 
@@ -43,7 +43,6 @@ include("include/sidebar.php");
 
 //$info = "Hello World";
 ?>
-<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 
@@ -51,61 +50,61 @@ include("include/sidebar.php");
 <div class="row">
   <div class="col-md-12">
     <div class="well well-custom">
-      <?php if($user_role != 1) {
+      <?php if ($user_role != 1) {
         $sql = "SELECT * FROM `task_info` WHERE `t_end_time`>CURRENT_TIMESTAMP AND `task_id`=$task_id;";
         $info = $obj_admin->manage_all_info($sql);
-        if ($info->rowCount() > 0) {?>
-        <div class="row">
-          <div class="col-md-8 ">
-            <div class="btn-group">
-              <?php
-              
-              $sql = "SELECT * FROM `attendance_info` WHERE `atn_user_id` = $user_id AND `task_id`=$task_id AND `out_time` IS NULL";
-              $info = $obj_admin->manage_all_info($sql);
-              $num_row = $info->rowCount();
-              if ($num_row == 0) {
-              ?>
+        if ($info->rowCount() > 0) { ?>
+          <div class="row">
+            <div class="col-md-8 ">
+              <div class="btn-group">
+                <?php
 
-                <div class="btn-group">
-                  <form method="post" role="form" action="">
-                    <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
-                    <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                    <button type="submit" name="add_punch_in" class="btn btn-success btn-lg rounded">Start</button>
-                  </form>
-                </div>
+                $sql = "SELECT * FROM `attendance_info` WHERE `atn_user_id` = $user_id AND `task_id`=$task_id AND `out_time` IS NULL";
+                $info = $obj_admin->manage_all_info($sql);
+                $num_row = $info->rowCount();
+                if ($num_row == 0) {
+                ?>
 
-              <?php }else{?>
-                <a title="Update Task Comment" class="btn btn-danger btn-lg rounded" href="update-task.php?task_id=<?php echo $task_id;?>">Stop</a>
-              <?php } ?>
+                  <div class="btn-group only-desktop">
+                    <form method="post" role="form" action="">
+                      <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
+                      <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                      <button type="submit" name="add_punch_in" class="btn btn-success btn-lg rounded">Start</button>
+                    </form>
+                  </div>
 
+                <?php } else { ?>
+                  <a title="Update Task Comment" class="btn btn-danger btn-lg rounded only-desktop" href="update-task.php?task_id=<?php echo $task_id; ?>">Stop</a>
+                <?php } ?>
+
+              </div>
             </div>
           </div>
-        </div>
-      <?php } else { ?>
-        <div>
-          <h4 class='text-center bg-danger text-danger'>
-            Sorry, the deadline for this task has passed. Please contact your 'Team Manager'.
-          </h4>
-        </div>
+        <?php } else { ?>
+          <div>
+            <h4 class='text-center bg-danger text-danger'>
+              Sorry, the deadline for this task has passed. Please contact your 'Team Manager'.
+            </h4>
+          </div>
       <?php }
-    } ?>
-    <?php
-      $currentDate=date("Y-m-d");
+      } ?>
+      <?php
+      $currentDate = date("Y-m-d");
       if ($user_role == 1) {
-        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '".$currentDate."%' AND out_time LIKE '".$currentDate."%';";
+        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '" . $currentDate . "%' AND out_time LIKE '" . $currentDate . "%';";
       } else {
-        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '".$currentDate."%' AND out_time LIKE '".$currentDate."%' AND atn_user_id=$user_id;";
+        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '" . $currentDate . "%' AND out_time LIKE '" . $currentDate . "%' AND atn_user_id=$user_id;";
       }
       $totalWorkInfo = $obj_admin->manage_all_info($sql);
       $workRow = $totalWorkInfo->rowCount();
       if ($workRow > 0) {
         $totalWork = $totalWorkInfo->fetch(PDO::FETCH_ASSOC);
-        if($totalWork['todayTotalWork']!=''){
-          $today=strtotime($totalWork['todayTotalWork']);
-          echo '<h4 class="text-center text-danger">Today Total Works: <b class="text-success">'.date('H:i:s', $today).'</b></h4>';
+        if ($totalWork['todayTotalWork'] != '') {
+          $today = strtotime($totalWork['todayTotalWork']);
+          echo '<h4 class="text-center text-danger">Today Total Works: <b class="text-success">' . date('H:i:s', $today) . '</b></h4>';
         }
       }
-    ?>
+      ?>
       <div class="">
         <h3 class="text-center">Manage Attendance</h3>
       </div>
@@ -147,7 +146,7 @@ include("include/sidebar.php");
               echo '<tr><td colspan="7">No Data found</td></tr>';
             }
             while ($row = $info->fetch(PDO::FETCH_ASSOC)) {
-              $task_id=$row['task_id'];
+              $task_id = $row['task_id'];
             ?>
               <tr>
                 <td><?php echo $serial;
@@ -170,31 +169,37 @@ include("include/sidebar.php");
 
 
                     ?></td>
-                    
+
                 <td><?php echo $row['atn_updates']; ?></td>
-                <?php // if ($row['out_time'] == null) { ?>
-                  <!-- <td>
+                <?php // if ($row['out_time'] == null) { 
+                ?>
+                <!-- <td>
                     <form method="post" role="form" action="">
-                      <input type="hidden" name="punch_in_time" value="<?php // echo $row['in_time']; ?>">
-                      <input type="hidden" name="aten_id" value="<?php // echo $row['aten_id']; ?>">
-                      <input type="hidden" name="task_id" value="<?php // echo $task_id; ?>">
+                      <input type="hidden" name="punch_in_time" value="<?php // echo $row['in_time']; 
+                                                                        ?>">
+                      <input type="hidden" name="aten_id" value="<?php // echo $row['aten_id']; 
+                                                                  ?>">
+                      <input type="hidden" name="task_id" value="<?php // echo $task_id; 
+                                                                  ?>">
                       <textarea style="color: black !important;" name="task_update" id="updates" class="hidden"></textarea>
                       <button id="add_punch_out" class="btn btn-danger btn-xs rounded">Clock Out</button>
                       <button type="submit" id="submit" name="add_punch_out" class="btn btn-success btn-xs rounded hidden">Update</button>
                     </form>
                   </td> -->
-                <?php // } else { ?>
-                  <!-- <td class="text-center">
+                <?php // } else { 
+                ?>
+                <!-- <td class="text-center">
                     ------
                   </td> -->
-                <?php // } ?>
+                <?php // } 
+                ?>
                 <?php if ($user_role == 1) { ?>
                   <td>
-                    <?php 
-                      $sql = "SELECT * FROM `task_info` WHERE `task_id`=".$row['task_id'].";";
-                      $taskInfo = $obj_admin->manage_all_info($sql);
-                      $taskData = $taskInfo->fetch(PDO::FETCH_ASSOC);
-                      echo $taskData['t_title']; 
+                    <?php
+                    $sql = "SELECT * FROM `task_info` WHERE `task_id`=" . $row['task_id'] . ";";
+                    $taskInfo = $obj_admin->manage_all_info($sql);
+                    $taskData = $taskInfo->fetch(PDO::FETCH_ASSOC);
+                    echo $taskData['t_title'];
                     ?>
                   </td>
 
@@ -217,12 +222,6 @@ include("include/sidebar.php");
 
 
 <?php
-}else{?>
-  <div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
-    <h2>Sorry ETMS Application not working on this system</h2>
-    <button onclick="window.location.reload();">Please Reload</button>
-  </div>
-<?php }
 include("include/footer.php");
 
 

@@ -58,64 +58,49 @@ request.onreadystatechange = function(response) {
 };
 
 $( document ).ready(function() {
-	if(getCookie('siteWillOpen') === null || getCookie('siteWillOpen') === ''){
-		setCookie('siteWillOpen', null, 5);
-	}
-	function setCookie(cname, cvalue, exdays) {
-		const d = new Date();
-		d.setTime(d.getTime() + (exdays * 60 * 1000));
-		let expires = "expires="+d.toUTCString();
-		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-	}
-	  
-	function getCookie(cname) {
-		let name = cname + "=";
-		let ca = document.cookie.split(';');
-		for(let i = 0; i < ca.length; i++) {
-			let c = ca[i];
-			while (c.charAt(0) == ' ') {
-				c = c.substring(1);
-			}
-			if (c.indexOf(name) == 0) {
-				return c.substring(name.length, c.length);
-			}
-		}
-		return "";
-	}
-	/* Storing user's device details in a variable*/
-	let details = navigator.userAgent;
+  if (getCookie("siteWillOpen") === null || getCookie("siteWillOpen") === "") {
+    setCookie("siteWillOpen", null, 5);
+  }
+  function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + exdays * 60 * 1000);
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
 
-	/* Creating a regular expression
-	containing some mobile devices keywords
-	to search it in details string*/
-	let regexp = /android|iphone|kindle|ipad/i;
+  function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 
-	/* Using test() method to search regexp in details
-	it returns boolean value*/
-	let isMobileDevice = regexp.test(details);
+  // let details = navigator.userAgent;
 
-	if (isMobileDevice) {
-		var preSite=getCookie('siteWillOpen');
-		// alert("preSite "+preSite+typeof(getCookie('siteWillOpen')));
-		setCookie("siteWillOpen", "notOpen", 10);
-		if(confirm("Are you open this ETMS Application in desktop/laptop")){
-			// preSite == "open" && 
-			window.location.reload();
-		}
-		// document.cookie = "siteWillOpen = notOpen";
-		// setCookie("siteWillOpen", "notOpen", 2);
-		// window.location.reload();
-	} else {
-		var preSite=getCookie('siteWillOpen');
-		// alert("preSite "+preSite+typeof(getCookie('siteWillOpen')));
-		setCookie("siteWillOpen", "open", 10);
-		
-		if(preSite == "notOpen" && confirm("Are you open this ETMS Application in desktop/laptop")){
-			window.location.reload();
-		}
-		// document.cookie = "siteWillOpen = open";
-		// setCookie("siteWillOpen", "open", 2);
-		// window.location.reload();
-	} 
-	
+  // let regexp = /android|iphone|kindle|ipad/i;
+
+  // let isMobileDevice = regexp.test(details);
+
+  // if (isMobileDevice) {
+  // 	var preSite=getCookie('siteWillOpen');
+  // 	setCookie("siteWillOpen", "notOpen", 10);
+  // 	// if(confirm("Are you open this ETMS Application in desktop/laptop")){
+  // 	// 	// preSite == "open" &&
+  // 	// 	window.location.reload();
+  // 	// }
+  // } else {
+  // 	var preSite=getCookie('siteWillOpen');
+  // 	setCookie("siteWillOpen", "open", 10);
+  // 	// if(preSite == "notOpen" && confirm("Are you open this ETMS Application in desktop/laptop")){
+  // 	// 	window.location.reload();
+  // 	// }
+  // }
 });

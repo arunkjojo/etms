@@ -1,0 +1,65 @@
+/* Desktop */
+@media only screen and (min-width: 1200px) {
+    .only-desktop {
+        display: block;
+    }
+
+    .only-mobile {
+        display: none;
+    }
+}
+
+/* Large Desktop */
+@media only screen and (min-width: 1600px) {
+    .only-desktop {
+        display: block;
+    }
+
+    .only-mobile {
+        display: none;
+    }
+}
+
+/* Tablet - Portrait */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+    .only-desktop {
+        display: none;
+    }
+
+    .only-mobile {
+        display: block;
+    }
+}
+
+/* Tablet - Landscape */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+    .only-desktop {
+        display: block;
+    }
+
+    .only-mobile {
+        display: block;
+    }
+}
+
+/* Mobile - Portrait */
+@media only screen and (max-device-width: 767px) and (orientation: portrait) {
+    .only-desktop {
+        display: none;
+    }
+
+    .only-mobile {
+        display: block;
+    }
+}
+
+/* Mobile - Landscape */
+@media only screen and (max-device-width: 767px) and (orientation: landscape) {
+    .only-desktop {
+        display: none;
+    }
+
+    .only-mobile {
+        display: block;
+    }
+}

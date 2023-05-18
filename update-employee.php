@@ -38,7 +38,6 @@ $page_name = "Admin";
 include("include/sidebar.php");
 ?>
 
-<?php if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ ?>
 <div class="row">
   <div class="col-md-12">
     <div class="well well-custom">
@@ -110,13 +109,7 @@ include("include/sidebar.php");
 </div>
 
 
-<?php 
-}else{?>
-  <div style="text-align: center; margin-top: 50%; margin-left: auto; margin-right: auto; color: red; background-color:black">
-    <h2>Sorry ETMS Application not working on this system</h2>
-    <button onclick="window.location.reload();">Please Reload</button>
-  </div>
-<?php }
+<?php
 include("include/footer.php");
 
 ?>
