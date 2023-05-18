@@ -57,7 +57,6 @@
       </div>
 
       <?php
-      $user_role = $_SESSION['user_role'];
       if ($user_role == 1) {
       ?>
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -126,8 +125,6 @@
 
       <?php
 
-      } else {
-        header('Location: index.php');
       }
 
       ?>

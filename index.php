@@ -1,14 +1,8 @@
 <?php
 require 'authentication.php'; // admin authentication check 
 
-// auth check
-if (isset($_SESSION['admin_id'])) {
-	$user_id = $_SESSION['admin_id'];
-	$user_name = $_SESSION['admin_name'];
-	$security_key = $_SESSION['security_key'];
-	if ($user_id != NULL && $security_key != NULL) {
-		header('Location: task-info.php');
-	}
+if ($user_id != NULL && $security_key != NULL) {
+	header('Location: task-info.php');
 }
 
 if (isset($_POST['login_btn'])) {
@@ -34,7 +28,7 @@ include("include/login_header.php"); ?>
 		margin: unset !important
 	}
 </style>
-<?php // if(isset($_COOKIE) && isset($_COOKIE['siteWillOpen']) && $_COOKIE['siteWillOpen'] == "open"){ 
+<?php
 ?>
 <div class="col-lg-4 col-md-6 col-sm-12">
 	<div class="well rounded-0" style="background:#fff !important">

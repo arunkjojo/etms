@@ -15,3 +15,6 @@ $obj_admin = new Admin_Class();
 if (isset($_GET['logout'])) {
   $obj_admin->admin_logout();
 }
+
+
+require 'auth-lock.php';

@@ -12,6 +12,11 @@ class Admin_Class
 		$password = ''; // Kalari123.
 		$db_name = 'etms_db'; //inluxi_etms
 
+		// $host_name = 'localhost';
+		// $user_name = 'inluxi_etms';
+		// $password = 'Kalari123.';
+		// $db_name = 'inluxi_etms';
+
 		try {
 			$connection = new PDO("mysql:host={$host_name}; dbname={$db_name}", $user_name,  $password);
 			$this->db = $connection; // connection established

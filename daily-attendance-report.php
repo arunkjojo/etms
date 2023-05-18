@@ -8,18 +8,10 @@ $base_url = $protocol . "://" . $_SERVER['SERVER_NAME'] . '/' . (explode('/', $_
 ?>
 <?php
 require 'authentication.php'; // admin authentication check 
-
 // auth check
-$user_id = $_SESSION['admin_id'];
-$user_name = $_SESSION['name'];
-$security_key = $_SESSION['security_key'];
 if ($user_id == NULL || $security_key == NULL) {
   header('Location: index.php');
 }
-
-// check admin
-$user_role = $_SESSION['user_role'];
-
 
 if (isset($_GET['delete_task'])) {
   $action_id = $_GET['task_id'];

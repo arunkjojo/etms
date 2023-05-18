@@ -24,6 +24,7 @@ const cacheAssets = [
   "/update-admin.php",
   "/update-employee.php",
   "/update-task.php",
+  "/auth-lock.php",
 
   "/assets/bootstrap-datepicker/css/datepicker-custom.css",
   "/assets/bootstrap-datepicker/css/datepicker.css",
