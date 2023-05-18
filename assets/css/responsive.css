@@ -1,3 +1,10 @@
+.only-mobile {
+    display: none;
+}
+
+.only-desktop {
+    display: none;
+}
 /* Desktop */
 @media only screen and (min-width: 1200px) {
     .only-desktop {
