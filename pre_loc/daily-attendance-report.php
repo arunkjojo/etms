@@ -40,7 +40,7 @@ include("include/sidebar.php");
       <div class="gap"></div>
       <div class="row">
         <div class="col-md-4">
-          <input max="<?php echo date('Y-m-d'); ?>" type="date" id="date" value="<?= $date ?>" class="form-control rounded-0">
+          <input type="date" id="date" value="<?= $date ?>" class="form-control rounded-0">
         </div>
         <div class="col-md-4">
           <button class="btn btn-primary btn-sm btn-menu" type="button" id="filter"><i class="glyphicon glyphicon-filter"></i> Filter</button>
@@ -61,7 +61,6 @@ include("include/sidebar.php");
             <tr>
               <th>S.N.</th>
               <th>Name</th>
-              <th>Task</th>
               <th>In Time</th>
               <th>Out Time</th>
               <th>Total Duration</th>
@@ -70,9 +69,10 @@ include("include/sidebar.php");
           <tbody>
 
             <?php
-            $sql = "SELECT a.*, b.fullname, c.t_title FROM attendance_info a LEFT JOIN tbl_admin b ON(a.atn_user_id = b.user_id) LEFT JOIN task_info c ON (c.task_id = a.task_id) where ('{$date}' BETWEEN date(a.in_time) and date(a.out_time))
+            $sql = "SELECT a.*, b.fullname 
+                  FROM attendance_info a
+                  LEFT JOIN tbl_admin b ON(a.atn_user_id = b.user_id) where ('{$date}' BETWEEN date(a.in_time) and date(a.out_time))
                   ORDER BY a.aten_id DESC";
-            // echo $sql;
             $info = $obj_admin->manage_all_info($sql);
             $serial  = 1;
             $num_row = $info->rowCount();
@@ -85,7 +85,6 @@ include("include/sidebar.php");
                 <td><?php echo $serial;
                     $serial++; ?></td>
                 <td><?php echo $row['fullname']; ?></td>
-                <td><?php echo $row['t_title']; ?></td>
                 <td><?php echo $row['in_time']; ?></td>
                 <td><?php echo $row['out_time']; ?></td>
                 <td><?php
@@ -112,52 +111,6 @@ include("include/sidebar.php");
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="well well-custom rounded-0">
-      <p class="text-center">
-      <h3>Daily Employee Attendance Report</h3>
-      </p>
-      <div class="gap"></div>
-
-      <div class="gap"></div>
-      <div class="table-responsive" id="printout">
-        <table class="table table-codensed table-custom">
-          <thead>
-            <tr>
-              <th>S.N.</th>
-              <th>Employee</th>
-              <th>Total Work</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <?php
-            $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(a.total_duration))) as totalWork, b.fullname 
-                  FROM attendance_info a
-                  LEFT JOIN tbl_admin b ON(a.atn_user_id = b.user_id) where ('{$date}' BETWEEN date(a.in_time) and date(a.out_time))
-                  GROUP BY b.fullname;";
-            $info = $obj_admin->manage_all_info($sql);
-            $serial  = 1;
-            $num_row = $info->rowCount();
-            if ($num_row == 0) {
-              echo '<tr><td colspan="5">No Data found</td></tr>';
-            }
-            while ($row = $info->fetch(PDO::FETCH_ASSOC)) {
-            ?>
-              <tr>
-                <td><?php echo $serial;
-                    $serial++; ?></td>
-                <td><?php echo $row['fullname']; ?></td>
-                <td><?php echo $row['totalWork']; ?></td>
-              </tr>
-            <?php } ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
 
 <?php
 include("include/footer.php");

@@ -1,0 +1,43 @@
+{
+    "short_name": "ETMS-i",
+    "name": "ETMS INLUXI",
+    "description": "Employee Time Management System at Inlux Intelligence.",
+    "icons": [
+        {
+            "src": "../assets/img/icon_x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "../assets/img/icon_x48.png",
+            "sizes": "48x48",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "../assets/img/icon_x192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "any"
+        },
+        {
+            "src": "../assets/img/icon_x512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any"
+        }
+    ],
+    "start_url": "/index.php",
+    "background_color": "#ffffff",
+    "display_override": [
+        "window-control-overlay",
+        "minimal-ui"
+    ],
+    "display": "standalone",
+    "theme_color": "#ffffff",
+    "scope": "/",
+    "orientation": "portrait",
+    "manifest_version": 2,
+    "version": "1.1.0.1"
+}

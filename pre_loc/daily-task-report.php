@@ -5,13 +5,14 @@ if (isset($_SERVER['HTTPS'])) {
   $protocol = 'http';
 }
 $base_url = $protocol . "://" . $_SERVER['SERVER_NAME'] . '/' . (explode('/', $_SERVER['PHP_SELF'])[1]) . '/';
-?>
-<?php
+
+
 require 'authentication.php'; // admin authentication check 
 // auth check
 if ($user_id == NULL || $security_key == NULL) {
   header('Location: index.php');
 }
+
 
 if (isset($_GET['delete_task'])) {
   $action_id = $_GET['task_id'];
@@ -32,6 +33,7 @@ include("include/sidebar.php");
 
 ?>
 <?php $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d') ?>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <div class="row">
@@ -40,7 +42,7 @@ include("include/sidebar.php");
       <div class="gap"></div>
       <div class="row">
         <div class="col-md-4">
-          <input max="<?php echo date('Y-m-d'); ?>" type="date" id="date" value="<?= $date ?>" class="form-control rounded-0">
+          <input type="date" id="date" value="<?= $date ?>" class="form-control rounded-0">
         </div>
         <div class="col-md-4">
           <button class="btn btn-primary btn-sm btn-menu" type="button" id="filter"><i class="glyphicon glyphicon-filter"></i> Filter</button>
@@ -50,29 +52,40 @@ include("include/sidebar.php");
 
       </div>
       <p class="text-center">
-      <h3>Daily Attendance Report</h3>
+      <h3>Daily Task Report</h3>
       </p>
       <div class="gap"></div>
 
       <div class="gap"></div>
+
       <div class="table-responsive" id="printout">
         <table class="table table-codensed table-custom">
           <thead>
             <tr>
-              <th>S.N.</th>
-              <th>Name</th>
-              <th>Task</th>
-              <th>In Time</th>
-              <th>Out Time</th>
-              <th>Total Duration</th>
+              <th>#</th>
+              <th>Task Title</th>
+              <th>Assigned To</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
 
             <?php
-            $sql = "SELECT a.*, b.fullname, c.t_title FROM attendance_info a LEFT JOIN tbl_admin b ON(a.atn_user_id = b.user_id) LEFT JOIN task_info c ON (c.task_id = a.task_id) where ('{$date}' BETWEEN date(a.in_time) and date(a.out_time))
-                  ORDER BY a.aten_id DESC";
-            // echo $sql;
+            if ($user_role == 1) {
+              $sql = "SELECT a.*, b.fullname 
+                        FROM task_info a
+                        INNER JOIN tbl_admin b ON(a.t_user_id = b.user_id) where ('{$date}' BETWEEN date(a.t_start_time) and date(a.t_end_time))
+                        ORDER BY a.task_id DESC";
+            } else {
+              $sql = "SELECT a.*, b.fullname 
+                  FROM task_info a
+                  INNER JOIN tbl_admin b ON(a.t_user_id = b.user_id)
+                  WHERE a.t_user_id = $user_id and ('{$date}' BETWEEN date(a.t_start_time) and date(a.t_end_time))
+                  ORDER BY a.task_id DESC";
+            }
+
             $info = $obj_admin->manage_all_info($sql);
             $serial  = 1;
             $num_row = $info->rowCount();
@@ -84,80 +97,32 @@ include("include/sidebar.php");
               <tr>
                 <td><?php echo $serial;
                     $serial++; ?></td>
-                <td><?php echo $row['fullname']; ?></td>
                 <td><?php echo $row['t_title']; ?></td>
-                <td><?php echo $row['in_time']; ?></td>
-                <td><?php echo $row['out_time']; ?></td>
-                <td><?php
-                    if ($row['total_duration'] == null) {
-                      $date = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
-                      $current_time = $date->format('d-m-Y H:i:s');
-
-                      $dteStart = new DateTime($row['in_time']);
-                      $dteEnd   = new DateTime($current_time);
-                      $dteDiff  = $dteStart->diff($dteEnd);
-                      echo $dteDiff->format("%H:%I:%S");
-                    } else {
-                      echo $row['total_duration'];
-                    }
-
-
-                    ?></td>
-              </tr>
-            <?php } ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-    <div class="well well-custom rounded-0">
-      <p class="text-center">
-      <h3>Daily Employee Attendance Report</h3>
-      </p>
-      <div class="gap"></div>
-
-      <div class="gap"></div>
-      <div class="table-responsive" id="printout">
-        <table class="table table-codensed table-custom">
-          <thead>
-            <tr>
-              <th>S.N.</th>
-              <th>Employee</th>
-              <th>Total Work</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <?php
-            $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(a.total_duration))) as totalWork, b.fullname 
-                  FROM attendance_info a
-                  LEFT JOIN tbl_admin b ON(a.atn_user_id = b.user_id) where ('{$date}' BETWEEN date(a.in_time) and date(a.out_time))
-                  GROUP BY b.fullname;";
-            $info = $obj_admin->manage_all_info($sql);
-            $serial  = 1;
-            $num_row = $info->rowCount();
-            if ($num_row == 0) {
-              echo '<tr><td colspan="5">No Data found</td></tr>';
-            }
-            while ($row = $info->fetch(PDO::FETCH_ASSOC)) {
-            ?>
-              <tr>
-                <td><?php echo $serial;
-                    $serial++; ?></td>
                 <td><?php echo $row['fullname']; ?></td>
-                <td><?php echo $row['totalWork']; ?></td>
+                <td><?php echo $row['t_start_time']; ?></td>
+                <td><?php echo $row['t_end_time']; ?></td>
+                <td>
+                  <?php if ($row['status'] == 1) {
+                    // echo "In Progress <span style='color:#5bcad9;' class=' glyphicon glyphicon-refresh' >";
+                    echo '<small class="label label-warning px-3">In Progress <span class="glyphicon glyphicon-refresh" ></small>';
+                  } elseif ($row['status'] == 2) {
+                    echo '<small class="label label-success px-3">In Completed <span class="glyphicon glyphicon-ok" ></small>';
+                    // echo "Completed <span style='color:#00af16;' class=' glyphicon glyphicon-ok' >";
+                  } else {
+                    echo '<small class="label label-default border px-3">In Completed <span class="glyphicon glyphicon-remove" ></small>';
+                  } ?>
+
+                </td>
               </tr>
             <?php } ?>
+
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+
 
 <?php
 include("include/footer.php");
@@ -189,7 +154,7 @@ include("include/footer.php");
 <script type="text/javascript">
   $(function() {
     $('#filter').click(function() {
-      location.href = "./daily-attendance-report.php?date=" + $('#date').val()
+      location.href = "./daily-task-report.php?date=" + $('#date').val()
     })
     $('#print').click(function() {
       var h = $('head').clone()

@@ -414,7 +414,7 @@ class Admin_Class
 			$add_attendance = $this->db->prepare("INSERT INTO `attendance_info` (`atn_user_id`, `in_time`, `task_id`) VALUES ($user_id, '$punch_in_time',$task_id)");
 			$add_attendance->execute();
 
-			header('Location: attendance-info.php?tId=' . $task_id);
+			header('Location: attendance-info.php?tId='.$task_id);
 		} catch (PDOException $e) {
 			echo $e->getMessage();
 		}
@@ -434,12 +434,12 @@ class Admin_Class
 		$dteEnd   = new DateTime($punch_out_time);
 		$dteDiff  = $dteStart->diff($dteEnd);
 		$total_duration = $dteDiff->format("%H:%I:%S");
-		$atn_updates = $this->test_form_input_data($data['task_update']);
-		$task_id = $this->test_form_input_data($data['task_id']);
+		$atn_updates=$this->test_form_input_data($data['task_update']);
+		$task_id=$this->test_form_input_data($data['task_id']);
 		$attendance_id  = $this->test_form_input_data($data['aten_id']);
 
 		try {
-			$sql = "UPDATE `attendance_info` SET `out_time` = :out_time, `total_duration` = :duration,`atn_updates`=:updates WHERE `aten_id` = :id ";
+			$sql="UPDATE `attendance_info` SET `out_time` = :out_time, `total_duration` = :duration,`atn_updates`=:updates WHERE `aten_id` = :id ";
 			// echo "br />".$sql;
 			$update_user = $this->db->prepare($sql);
 
@@ -453,7 +453,7 @@ class Admin_Class
 
 
 
-			header('Location: attendance-info.php?tId=' . $task_id);
+			header('Location: attendance-info.php?tId='.$task_id);
 		} catch (PDOException $e) {
 			echo $e->getMessage();
 		}
@@ -548,34 +548,5 @@ class Admin_Class
 		} catch (PDOException $e) {
 			echo $e->getMessage();
 		}
-	}
-
-	public function time_elapsed_string($startDateTime, $endDateTime, $full = false)
-	{
-		$start = new DateTime($startDateTime);
-		$end = new DateTime($endDateTime);
-		$diff = $end->diff($start);
-
-		// $diff->w = floor($diff->d / 7);
-		// $diff->d -= $diff->w * 7;
-
-		$string = array(
-			'y' => 'year',
-			'm' => 'month',
-			'd' => 'day',
-			'h' => 'hour',
-			'i' => 'minute',
-			's' => 'second',
-		);
-		foreach ($string as $k => &$v) {
-			if ($diff->$k) {
-				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-			} else {
-				unset($string[$k]);
-			}
-		}
-
-		if (!$full) $string = array_slice($string, 0, 1);
-		return $string ? implode(', ', $string) : '';
 	}
 }

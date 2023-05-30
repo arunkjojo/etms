@@ -6,18 +6,14 @@ require 'authentication.php'; // admin authentication check
 if ($user_id == NULL || $security_key == NULL) {
   header('Location: index.php');
 }
-if (isset($_GET['tId']) && $_GET['tId'] != '') {
-  $task_id = $_GET['tId'];
-} else {
-  header("Location: /task-info.php");
+
+if ($user_role != 1) {
+  if (isset($_GET['tId']) && $_GET['tId'] != '') {
+    $task_id = $_GET['tId'];
+  } else {
+    header("Location: /task-info.php");
+  }
 }
-// if ($user_role != 1) {
-//   if (isset($_GET['tId']) && $_GET['tId'] != '') {
-//     $task_id = $_GET['tId'];
-//   } else {
-//     header("Location: /task-info.php");
-//   }
-// }
 
 if (isset($_GET['delete_attendance'])) {
   $action_id = $_GET['aten_id'];
@@ -41,29 +37,6 @@ if (isset($_POST['add_punch_in'])) {
 $page_name = "Attendance";
 include("include/sidebar.php");
 
-$sql_time = "SELECT * FROM `task_info` WHERE `task_id`=$task_id";
-
-$sql = $sql_time . " AND `t_end_time`>CURRENT_TIMESTAMP;";
-$task_info = $obj_admin->manage_all_info($sql);
-$task_count = $task_info->rowCount();
-
-$time_task_info = $obj_admin->manage_all_info($sql_time);
-$time_task_count = $time_task_info->rowCount();
-if ($time_task_count > 0) {
-  $taskData = $time_task_info->fetch(PDO::FETCH_ASSOC);
-  $t_title = $taskData['t_title'];
-  $t_description = $taskData['t_description'];
-  $totalTime = $obj_admin->time_elapsed_string($taskData['t_start_time'], $taskData['t_end_time'], true);
-
-  $datetime1 = new DateTime($taskData['t_start_time']);
-  $datetime2 = new DateTime($taskData['t_end_time']);
-  $diff = $datetime1->diff($datetime2);
-  $hours = $diff->h + ($diff->days * 24);
-  $minutes = $diff->i;
-  $seconds = $diff->s;
-  $totalHoursMinutesSeconds = ($hours > 0 ? ($hours < 10 ? '0' . $hours : $hours) : '00') . ':' . ($minutes > 0 ? ($minutes < 10 ? '0' . $minutes : $minutes) : '00') . ':' . ($seconds > 0 ? ($seconds < 10 ? '0' . $seconds : $seconds) : '00');
-}
-
 //$info = "Hello World";
 ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -73,103 +46,61 @@ if ($time_task_count > 0) {
 <div class="row">
   <div class="col-md-12">
     <div class="well well-custom">
-      <?php if ($user_role != 1 && $task_count > 0) { ?>
-        <div class="row">
-          <?php
-          $sql = "SELECT * FROM `attendance_info` WHERE `atn_user_id` = $user_id AND `task_id`=$task_id AND `out_time` IS NULL";
-          $info = $obj_admin->manage_all_info($sql);
-          $num_row = $info->rowCount();
-          if ($num_row == 0) {
-          ?>
-            <div class="col-lg-1 only-desktop">
-              <form method="post" role="form" action="">
-                <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
-                <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                <button type="submit" name="add_punch_in" class="btn btn-success btn-lg rounded">Start</button>
-              </form>
-            </div>
-          <?php } else { ?>
-            <div class="col-lg-1 only-desktop">
-              <a title="Update Task Comment" class="btn btn-danger btn-lg rounded " href="update-task.php?task_id=<?php echo $task_id; ?>">Stop</a>
-            </div>
-          <?php } ?>
+      <?php if ($user_role != 1) {
+        $sql = "SELECT * FROM `task_info` WHERE `t_end_time`>CURRENT_TIMESTAMP AND `task_id`=$task_id;";
+        $info = $obj_admin->manage_all_info($sql);
+        if ($info->rowCount() > 0) { ?>
+          <div class="row">
+            <div class="col-md-8 ">
+              <div class="btn-group">
+                <?php
 
-          <div class="col-12 col-lg-10 task_dtl">
-            <?php if ($task_count > 0 && $t_title != '') { ?>
-              <b class="text-danger mt-0 mb-0"><?php echo $t_title; ?></b>
-              <p style="margin: 0px !important;">
-                Description: <?php echo $t_description; ?>
-                <br />Total Hours: <b class="text-danger"><?php echo $totalTime ?></b>
-              </p>
-            <?php } ?>
+                $sql = "SELECT * FROM `attendance_info` WHERE `atn_user_id` = $user_id AND `task_id`=$task_id AND `out_time` IS NULL";
+                $info = $obj_admin->manage_all_info($sql);
+                $num_row = $info->rowCount();
+                if ($num_row == 0) {
+                ?>
+
+                  <div class="btn-group only-desktop">
+                    <form method="post" role="form" action="">
+                      <input type="hidden" name="task_id" value="<?php echo $task_id; ?>">
+                      <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+                      <button type="submit" name="add_punch_in" class="btn btn-success btn-lg rounded">Start</button>
+                    </form>
+                  </div>
+
+                <?php } else { ?>
+                  <a title="Update Task Comment" class="btn btn-danger btn-lg rounded only-desktop" href="update-task.php?task_id=<?php echo $task_id; ?>">Stop</a>
+                <?php } ?>
+
+              </div>
+            </div>
           </div>
-        </div>
-      <?php } else if ($user_role != 1) { ?>
-        <div class="task_dtl">
-          <h4 class='text-center bg-danger text-danger'>
-            Sorry, the deadline for this task has passed. Please contact your 'Team Manager'.
-          </h4>
-        </div>
-      <?php }  ?>
-      <?php if ($time_task_count != 0 && $user_role == 1) { ?>
-        <div class="task_dtl">
-          <b class="text-danger mt-0 mb-0"><?php echo $t_title; ?></b>
-          <p>
-            Description: <b><?php echo $t_description; ?></b>
-            <br />Stating: <b><?php echo $taskData['t_start_time']; ?></b> - Ending: <b><?php echo $taskData['t_end_time']; ?></b>
-            <br /> Total Hours: <b class="text-danger"><?php echo $totalTime ?></b>
-          </p>
-        </div>
+        <?php } else { ?>
+          <div>
+            <h4 class='text-center bg-danger text-danger'>
+              Sorry, the deadline for this task has passed. Please contact your 'Team Manager'.
+            </h4>
+          </div>
       <?php }
-
+      } ?>
+      <?php
       $currentDate = date("Y-m-d");
-
-      $todayWorkSql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayWork FROM `attendance_info` WHERE `in_time` LIKE '" . $currentDate . "%' AND out_time LIKE '" . $currentDate . "%' AND  `task_id`=$task_id";
-
-      $totalWorkSql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS totalWork FROM `attendance_info` WHERE `task_id`=$task_id";
-
-      if ($user_role != 1) {
-        $todayWorkSql .= " AND atn_user_id=$user_id;";
-        $totalWorkSql .= " AND atn_user_id=$user_id;";
-        // } else {
-        // $todayWorkSql .= ";";
-        // $totalWorkSql .= ";";
+      if ($user_role == 1) {
+        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '" . $currentDate . "%' AND out_time LIKE '" . $currentDate . "%';";
+      } else {
+        $sql = "SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(total_duration))) AS todayTotalWork FROM `attendance_info` WHERE `in_time` LIKE '" . $currentDate . "%' AND out_time LIKE '" . $currentDate . "%' AND atn_user_id=$user_id;";
       }
-      // echo "<hr />" . $todayWorkSql . "<hr />" . $totalWorkSql . "<hr />";
-      $todayWorkInfo = $obj_admin->manage_all_info($todayWorkSql);
-      $totalWorkInfo = $obj_admin->manage_all_info($totalWorkSql);
-
-      $todayWorkRow = $todayWorkInfo->rowCount();
-      $totalWorkRow = $totalWorkInfo->rowCount();
-
-      if ($totalWorkRow > 0) {
+      $totalWorkInfo = $obj_admin->manage_all_info($sql);
+      $workRow = $totalWorkInfo->rowCount();
+      if ($workRow > 0) {
         $totalWork = $totalWorkInfo->fetch(PDO::FETCH_ASSOC);
-      }
-      if ($todayWorkRow > 0) {
-        $todayWork = $todayWorkInfo->fetch(PDO::FETCH_ASSOC);
+        if ($totalWork['todayTotalWork'] != '') {
+          $today = strtotime($totalWork['todayTotalWork']);
+          echo '<h4 class="text-center text-danger">Today Total Works: <b class="text-success">' . date('H:i:s', $today) . '</b></h4>';
+        }
       }
       ?>
-      <div class="row">
-        <div class="col-12">
-          <h4 class="text-center text-info">
-            Total Estimate Hours: <b class="text-danger">
-              <?php echo (isset($totalHoursMinutesSeconds) && $totalHoursMinutesSeconds != '' ? $totalHoursMinutesSeconds : '00:00:00'); ?> </b>
-          </h4>
-        </div>
-        <div class="col-12 col-lg-6">
-          <h4 class="text-center text-info">
-            Total Works Hours: <b class="text-danger">
-              <?php echo (isset($totalWork) && $totalWork['totalWork'] != '' ? $totalWork['totalWork'] : '00:00:00'); ?> </b>
-          </h4>
-        </div>
-        <div class="col-12 col-lg-6">
-          <h4 class="text-center text-info">
-            Today Total Works: <b class="text-danger">
-              <?php echo (isset($todayWork) && $todayWork['todayWork'] != '' ? $todayWork['todayWork'] : '00:00:00'); ?> </b>
-          </h4>
-        </div>
-      </div>
-      <hr />
       <div class="">
         <h3 class="text-center">Manage Attendance</h3>
       </div>
@@ -198,7 +129,7 @@ if ($time_task_count > 0) {
 
             <?php
             if ($user_role == 1) {
-              $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `task_id`=$task_id ORDER BY `a`.`aten_id` DESC";
+              $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) ORDER BY `a`.`aten_id` DESC";
             } else {
               $sql = "SELECT `a`.*, `b`.`fullname` FROM `attendance_info` `a` LEFT JOIN `tbl_admin` `b` ON(`a`.`atn_user_id` = `b`.`user_id`) WHERE `atn_user_id` = $user_id AND `task_id`=$task_id ORDER BY `a`.`aten_id` DESC";
             }

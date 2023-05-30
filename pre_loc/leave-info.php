@@ -68,25 +68,9 @@ include("include/sidebar.php");
                         <label class="form-label" for="leave_reason">Leave Reason</label>
                         <textarea rows="6" class="form-control" name="leave_reason" id="leave_reason" required></textarea>
                     </div>
-                    <?php if ($user_role == 1) { ?>
-                        <div class="col-12">
-                            <label class="form-label" for="user_id">Employee</label>
-                            <select class="form-control" name="user_id" id="user_id" required>
-                                <option value="" disabled selected>Select Employee</option>
-                                <?php
-                                $info = $obj_admin->manage_all_info("SELECT * FROM `tbl_admin` ORDER BY `tbl_admin`.`user_role` DESC;");
-                                while ($row = $info->fetch(PDO::FETCH_ASSOC)) {
-                                ?>
-                                    <option value="<?php echo $row['user_id']; ?>"><?php echo $row['fullname']; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    <?php } else { ?>
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                    <?php } ?>
                     <hr />
                     <div class="col-12">
-
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                         <button type="submit" name="add_to_leave" class="btn btn-warning btn-lg btn-block rounded">Add leave</button>
                     </div>
                 </form>
@@ -121,11 +105,7 @@ include("include/sidebar.php");
                     <tbody>
 
                         <?php
-                        if ($user_role == 1) {
-                            $sql = "SELECT `id`, `user_id`, `leave_for`, `leave_time`, `leave_from`, `leave_to`, `leave_reason`, `leave_at`, `leave_approve` FROM `leaves` ORDER BY id ASC;";
-                        } else {
-                            $sql = "SELECT `id`, `user_id`, `leave_for`, `leave_time`, `leave_from`, `leave_to`, `leave_reason`, `leave_at`, `leave_approve` FROM `leaves` WHERE `user_id`=" . $user_id . ";";
-                        }
+                        $sql = "SELECT `id`, `user_id`, `leave_for`, `leave_time`, `leave_from`, `leave_to`, `leave_reason`, `leave_at`, `leave_approve` FROM `leaves` ORDER BY id ASC;";
                         $info = $obj_admin->manage_all_info($sql);
                         $serial  = 1;
                         $num_row = $info->rowCount();
@@ -188,13 +168,13 @@ include("include/footer.php");
         }
     })
     flatpickr('#leave_from', {
-        enableTime: true,
-        // minDate: "today",
+        enableTime: false,
+        minDate: "today",
         maxDate: new Date().fp_incr(13) // 14 days from now
     });
     flatpickr('#leave_to', {
-        enableTime: true,
-        // minDate: "today",
+        enableTime: false,
+        minDate: "today",
         maxDate: new Date().fp_incr(14) // 14 days from now
     });
 </script>
